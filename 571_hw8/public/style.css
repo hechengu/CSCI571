@@ -1,0 +1,40 @@
+#table {
+	background-color: #f2f2f2;
+	border-radius: 5px;
+	border: 2px solid;
+	border-color:  lightgray;
+}
+
+.row {
+  vertical-align: middle;
+}
+
+.star {
+  font-size: 23.5px;
+  padding: 3px 7px 3px 7px;
+  border-radius: 5px;
+  border: 2px solid;
+  border-color: lightgray;
+}
+
+.return {
+  align: left;
+  color: black;
+  font-size: 17px;
+  padding: 7px 20px 7px 10px;
+  border-radius: 5px;
+  border: 2px solid;
+  border-color: lightgray;
+}
+
+#arrow {
+  position: relative;
+  top: 7px;
+  font-size: 26px;
+}
+
+#twitter {
+  float: right;
+  margin-right: 10px;
+}
+

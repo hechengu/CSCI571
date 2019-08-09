@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Mainline>
+  <Table>
+   <Header>
+    <Data>Company</Data>
+    <Data>Number of Ships</Data>
+    <Data>HQ/Info</Data>
+    <Data>Market share</Data>
+    <Data>HomePage</Data>
+    <Data>Logo</Data>
+   </Header>
+
+   <Row>
+    <Company>Maersk Line</Company>
+    <Ships>763</Ships>
+    <Info>
+        <Location>Copenhagen, Denmark</Location>
+        <Intro>Maersk Line is the global container division and the largest operating unit of
+the Maersk Group, a Danish business conglomerate.</Intro>
+    </Info>
+    <Market>18.0%</Market>
+    <HomePage>https://www.maersk.com/</HomePage>
+    <Logo>http://csci571.com/hw/hw4/COSCO_container.jpeg</Logo>
+   </Row>
+
+   <Row>
+    <Company>Mediterranean Shipping Company</Company>
+    <Ships>469</Ships>
+    <Info>
+        <Location>Geneva, Switzerland</Location>
+        <Intro>The Geneva-headquartered company operates in all major ports of the world.
+MSC's most important port is Antwerp in Belgium. MSC Cruises is a division of the
+company focused on holiday cruises.</Intro>
+    </Info>
+    <Market>14.6%</Market>
+    <HomePage>https://www.msc.com/</HomePage>
+    <Logo>http://csci571.com/hw/hw4/MSC_container.jpeg</Logo>
+   </Row>
+
+   <Row>
+    <Company>CMA-CGM</Company>
+    <Ships>441</Ships>
+    <Info>
+        <Location>CMA CGM Tower, Marseille, France</Location>
+        <Intro>CMA CGM S.A is a French container transportation and shipping company. It is a leading worldwide shipping group, using 200 shipping routes between 420 ports in 150 different countries, Its headquarters are in Marseille, and its North American headquarters are in Norfolk, Virginia,United States.</Intro>
+    </Info>
+    <Market>11.1%</Market>
+    <HomePage>https://www.cma-cgm.com/</HomePage>
+    <Logo>http://csci571.com/hw/hw4/CMA_CGM_shipping_container.jpeg</Logo>
+   </Row>
+   
+   <Row>
+    <Company>China Ocean Shipping</Company>
+    <Ships>277</Ships>
+    <Info>
+        <Location>Beijing,China</Location>
+        <Intro>China Ocean Shipping (Group) Company(Chinese:中国远洋运输(集团)总公司), known as COSCO or COSCO Group, is a Chinese state-owned shipping and logistics services supplier company. Its headquarters is in Ocean Plaza in the Xiecheng District in Beijing.</Intro>
+    </Info>
+    <Market>8.0%</Market>
+    <HomePage>https://en.coscocs.com/</HomePage>
+    <Logo>http://csci571.com/hw/hw4/COSCO_container.jpeg</Logo>
+   </Row>
+
+    <Row>
+    <Company>Hapag-Lloyd</Company>
+    <Ships>219</Ships>
+    <Info>
+        <Location>Hamburg, Germany</Location>
+        <Intro>Hapag-Lloyd AG is a multinational German-based transportation company. It is composed of a cargo container shipping line, Hapag-Lloyd AG, which in turn owns other subsidiaries such as Hapag-Lloyd Cruises.</Intro>
+    </Info>
+    <Market>5.2%</Market>
+    <HomePage>https://www.hapag-lloyd.com/</HomePage>
+    <Logo>http://csci571.com/hw/hw4/Hapag-Lloyd_shipping_container.jpeg</Logo>
+   </Row>
+
+    <Row>
+    <Company>Evergreen</Company>
+    <Ships>186</Ships>
+    <Info>
+        <Location>Luzhu District, Taoyuan City, Taiwan</Location>
+        <Intro>Evergreen Marine Corporation (Chinese: 長榮海運) is a Taiwanese container transportation and shipping company headquartered in Luzhu District, Taoyuan City, Taiwan. Its principal trading routes are the Far East to North America, Central America and the Caribbean; the Far east to northern Europe and the east Mediterranean; Europe to the east coast of North America; the Far East to Australia, Mauritius, South Africa and South America; and an intra Asia service linking ports in Asia to the Middle East, Persian Gulf and the Red Sea.</Intro>
+    </Info>
+    <Market>5.0%</Market>
+    <HomePage>https://www.evergreen-marine.com/</HomePage>
+    <Logo>http://csci571.com/hw/hw4/EVERGREEN_container.jpeg</Logo>
+   </Row> 
+  </Table>
+</Mainline>

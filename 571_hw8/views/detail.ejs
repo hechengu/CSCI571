@@ -1,0 +1,286 @@
+<!--Detail page to show details of an indicated event-->
+
+<% include /header %>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+<script>
+  $(window).bind("load", function() {
+      let favorites = localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : [];
+      var eventId = $("#favorites p").text();
+      for (var i = 0; i < favorites.length; i++) {
+        if (favorites[i].Id == eventId) {
+          $('#favorites').html($("#favorites").html().replace("star_border", "star"));
+          $("#favorites").css("color", "#F8D33A");
+          break;
+        };
+      };
+  });
+
+  $(document).ready(function() {
+     var active = "event";
+     var index = 0;
+     $('a.nav-link').click(function() {
+	var divname = this.name;
+	var new_index = $(this).data("value");
+	console.log(divname);
+	console.log(new_index);
+	if(index < new_index) {
+	  $("#"+active).hide("slide", {direction : "right" }, 1200);
+	  $("#"+divname).delay(1200).show("slide", {direction: "left" }, 1200);
+	}
+	if(index > new_index) {
+	  $("#"+active).hide("slide", {direction : "left" }, 1200);
+	  $("#"+divname).delay(1200).show("slide", {direction: "right" }, 1200);
+	}
+	active = divname;
+	index = new_index;
+     });
+  });
+	
+
+</script>
+
+<body>
+    <div class="col-md-8 offset-lg-2">
+    <h2 class="text-center"><b><%= eventDetail['name'] %></b></h2>
+    <div class="function">
+	<a href="/result" class="return"><i id="arrow" class="material-icons">keyboard_arrow_left</i>List</a>
+	<i class="material-icons star" style="float:right;" id="favorites" onclick="return addFavorite(this);">star_border<p style="display:none;"><%= eventDetail.id %></p></i>
+	<a id="twitter" href="https://twitter.com/intent/tweet?text=Checkout <%= eventDetail['name'] %> located at <%= eventDetail['_embedded']['venues'][0]['name'] %>. Website: <%= eventDetail['url'] %> #CSCI571EventSearch">
+      <img style="width:35px; height:35px;" img src = "/Twitter.png" id="twitter_img"></a>
+    </div>
+    <div style="padding: 0 0 1em 0"></div>
+
+    <ul class="nav nav-pills justify-content-center">
+	<li class="nav-item">
+	<a class="nav-link active" data-toggle="tab" data-value="0" href="#event" name="event" >Event</a>
+	</li>
+	<li class="nav-item">
+	<a class="nav-link" data-toggle="tab" data-value="1" href="#artist" name="artist">Artist/Teams</a>
+	</li>
+	<li class="nav-item">
+	<a class="nav-link" data-toggle="tab" data-value="2" href="#venue" name="venue">Venue</a>
+	</li>
+	<li class="nav-item">
+	<a class="nav-link" data-toggle="tab" data-value="3" href="#upcoming" name="upcoming">UpcomingEvents</a>
+	</li>	
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="event" name="event">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td><b>Artists/Team(s)</b></td>
+              <td id="name"><%= eventDetail['name'] %></td>
+            </tr>
+            <tr>
+              <td><b>Venue</b></td>
+              <td id="location"><%= eventDetail['_embedded']['venues'][0]['name'] %></td>
+            </tr>
+            <tr>
+              <td><b>Time</b></td>
+              <td><span id="date"><%= eventDetail['dates']['start']['localDate'] %></span> <span id="time"><%= eventDetail['dates']['start']['localTime'] %></span></td>
+            </tr>
+            <tr>
+              <td><b>Category</b></td>
+              <td id="category"><%= eventDetail['classifications'][0]['segment']['name'] %></td>
+            </tr>
+            <tr>
+              <td><b>Ticket Status</b></td>
+              <td><%= eventDetail['dates']['status']['code'] %></td>
+            </tr>
+            <tr>
+              <td><b>Buy Ticket At</b></td>
+              <td><a href=<%= eventDetail['url'] %>>TicketMaster</a></td>
+            </tr>
+            <tr>
+              <td><b>Seat Map</b></td>
+              <td>
+                <% if(eventDetail['seatmap'] != undefined) { %>
+                <a href=<%= eventDetail['seatmap']['staticUrl'] %>>
+                View Seat Map Here
+                <% } else { %>
+                Seat Map Not Available
+                <% }%>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+	<div class="tab-pane fade" id="artist" name="artist">
+	    <table class="table table-striped">
+		<tbody>
+          	<% if (artistDetail != null) { %>
+            	<h5 class="text-center"><%= eventDetail['_embedded']['attractions'][0]['name'] %></h5>
+            	<tr>
+              	  <td><b>Name</b></td>
+                  <td><%= artistDetail["artists"]['items'][0]['name'] %></td>
+                </tr>
+                <tr>
+                  <td><b>Followers</b></td>
+                  <td><%= artistDetail["artists"]['items'][0]['followers']['total'] %></td>
+            	</tr>
+            	<tr>
+              	  <td><b>Popularity</b></td>
+                  <td><%= artistDetail["artists"]['items'][0]['popularity'] %></td>
+            	</tr>
+            	<tr>
+              	  <td><b>Check At</b></td>
+                  <td><a href=<%= artistDetail["artists"]['items'][0]['external_urls']['spotify'] %>>Spotify</a></td>
+            	</tr>
+          	<% } else { %>
+            	  <% eventDetail['_embedded']['attractions'].forEach(function(attraction){ %>
+                    <tr><p class="text-center"><%= attraction['name'] %></p></tr>
+                    <% attraction['images'].forEach(function(image){ %>
+                	<tr><td><img src=<%= image['url'] %>></td></tr>
+              	    <% }); %>
+            	<% }); %>
+          	<% } %>
+          	</tbody>
+	    </table>
+	</div>
+
+      <div class="tab-pane fade" id="venue" name="venue">
+        <table class="table table-striped">
+          <tbody>
+            <h5 class="text-center"><%= venueDetail['name'] %></h5>
+            <tr>
+              <td><b>Address</b></td>
+              <td><%= venueDetail['address']['line1'] %></td>
+            </tr>
+            <tr>
+              <td><b>City</b></td>
+              <td><%= venueDetail['city']['name'] %>, <%= venueDetail['state']['stateCode'] %> <%= venueDetail['postalCode'] %></td>
+            </tr>
+            <tr>
+              <td><b>Phone Number</b></td>
+              <td>
+                <% if (venueDetail['boxOfficeInfo'] != undefined) { %>
+                <%= venueDetail['boxOfficeInfo']['phoneNumberDetail'] %>
+                <% } else { %>
+                  Information Unavailable
+                <% } %>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Open Hours</b></td>
+              <td>
+                <% if (venueDetail['boxOfficeInfo'] != undefined) { %>
+                <%= venueDetail['boxOfficeInfo']['openHoursDetail'] %>
+                <% } else { %>
+                  Information Unavailable
+                <% } %>
+              </td>
+            </tr>
+            <tr>
+              <td><b>General Rule</b></td>
+              <td>
+                <% if (venueDetail['generalInfo'] != undefined) { %>
+                <%= venueDetail['generalInfo']['generalRule'] %>
+                <% } else { %>
+                  Information Unavailable
+                <% } %>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Child Rule</b></td>
+              <td>
+                <% if (venueDetail['generalInfo'] != undefined) { %>
+                <%= venueDetail['generalInfo']['childRule'] %>
+                <% } else { %>
+                  Information Unavailable
+                <% } %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div id="map" style="width: 100%; height: 400px; background-color: grey;"></div>
+        <script>
+          function initMap() {
+            var lat = <%= venueDetail['location']['latitude'] %>;
+            var lng = <%= venueDetail['location']['longitude'] %>
+            var center = {lat: lat, lng: lng};
+            var map = new google.maps.Map(
+                document.getElementById('map'), {zoom: 12, center: center});
+            var marker = new google.maps.Marker({position: center, map: map});
+          }
+        </script>
+
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmOJZ9uWZmpdms5RC0OCVPhCQuWgLantQ&callback=initMap">
+        </script>
+      </div>
+
+      <div class="tab-pane fade" id="upcoming" name="upcoming">
+        <% upcomingsDetail['resultsPage']['results']['event'].forEach(function(event, index){ %>
+          <% if (index < 5) { %>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><a href="<%= event.uri %>"><%= event.displayName %></a></h5>
+                <h6 class="card-subtitle">Artist: <%= event.performance[0].displayName %> <%= event.start.date %> <%= event.start.time %></h6>
+                <p class="card-text">Type: <%= event.type %></p>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="card collapse" id="upcomingevents">
+              <div class="card-body">
+                <h5 class="card-title"><a href="<%= event.uri %>"><%= event.displayName %></a></h5>
+                <h6 class="card-subtitle">Artist: <%= event.performance[0].displayName %> <%= event.start.date %> <%= event.start.time %></h6>
+                <p class="card-text">Type: <%= event.type %></p>
+              </div>
+            </div>
+          <% } %>
+        <% }); %>
+        <div style="padding: 0 0 1em 0"></div>
+        <div style="text-align: center">
+        <a class="btn btn-primary" data-toggle="collapse" href="#upcomingevents" onClick="return showMore(this);">Show More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+  <script>
+  function addFavorite(el) {
+    // Keep data format the same as which in event.ejs
+    var eventInfo = {
+      Id: $("#favorites p").text(),
+      Date: $("#date").text(),
+      Name: "<a href=\"" + "?eventId="+ $("#favorites p").text() + "\">" + $("#name").text() + "</a>",
+      Category: $("#category").text(),
+      Venue: $("#vlocation").text()
+    };
+    console.log(eventInfo);
+
+    let favorites = localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : [];
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+
+    if (el.firstChild.data == "star_border") {
+      el.firstChild.data = "star";
+      favorites.push(eventInfo);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      $("#favorites").css("color", "#F8D33A");
+      // console.log('favorites: ', favorites);
+    } else {
+      el.firstChild.data = "star_border";
+      var retrieved = localStorage.getItem('favorites');
+      for (var i = 0; i < favorites.length; i++) {
+        if (favorites[i].Id == eventInfo.Id) { favorites.splice(i,1); break; }
+      }
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      $("#favorites").css("color", "");
+    };
+  };
+
+  function showMore(el) {
+    if (el.firstChild.data == "Show More") {
+      el.firstChild.data = "Show Less";
+    } else {
+      el.firstChild.data = "Show More";
+    }
+  };
+</script>
+
+</html>
+							

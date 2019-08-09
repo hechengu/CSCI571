@@ -1,0 +1,190 @@
+<!--Event page to show search result-->
+
+<% include /header %>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+<script>
+
+  //Jquery bind option will execute this function when load the page. window is selector and load is action
+  $(window).bind("load", function() { 
+    //check and get favorite item from local storage.The data should be in JSON format
+    //console.log("GET");
+    let favorites = localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : [];
+    for (var i = 0; i<favorites.length; i++)
+    {
+	var eventInfo = favorites[i];
+	//This part we use jQuery selector to get value of element. The #i is string and + is connector
+	//Then use HTML function to switch star border on webpage
+	//$("#i"+eventInfo.Id).html().replace("star_border", "star");
+	$("#i"+eventInfo.Id).html($("#i"+eventInfo.Id).html().replace("star_border", "star"));
+	//set markup data as single URL to store favorite data information
+	var markup = "<tr id=\"" + eventInfo.Id + "\"><td>"+ (i+1) + "</td><td>" + eventInfo.Date + "</td><td>" + eventInfo.Name
+                     + "</td><td>" + eventInfo.Category + "</td><td>" + eventInfo.Venue + "</td><td style=\"text-align: center\">\
+                     <i class=\"material-icons star\" id=" + eventInfo.Id + " onclick=\"return removeFavorite(this);\">delete</i></td></tr>";
+	$('#favorites tbody').append(markup); // Add event item row to Favorite table  
+  	$("#i"+evebtInfo.Id).css('color', "#F8D33A");
+    }
+  });
+
+
+  $(document).ready(function() {
+     var active = "results";
+     var index = 0;
+     $('a.nav-link').click(function() {
+	var divname = this.name;
+	var new_index = $(this).data("value");
+	//console.log(divname);
+	//console.log(new_index);
+	if(active == "results" && divname == "favorites") {
+	  $("#"+active).hide("slide", {direction : "right" }, 1200);
+	  $("#"+divname).delay(1200).show("slide", {direction: "left" }, 1200);
+	}
+	if(active == "favorites" && divname =="results") {
+	  $("#"+active).hide("slide", {direction : "left" }, 1200);
+	  $("#"+divname).delay(1200).show("slide", {direction: "right" }, 1200);
+	}
+	active = divname;
+     });
+  });
+	
+
+</script>
+
+<body">
+  <div  anim-class class="col-md-8 offset-lg-2">
+      <ul class="nav nav-pills justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" data-value="0" href="#results"  name="results">Results</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" data-value="1" name="favorites" href="#favorites">Favorites</a>
+        </li>
+      </ul>
+
+      <div id="toolbar">
+        <a class="return" href="../"><i id="arrow" class="material-icons">keyboard_arrow_left</i>Back</a>
+      </div>
+
+      <div class="tab-content">
+        <div class="tab-pane fade show active" name="results" id="results">
+        <table class="table table-no-bordered table-hover" data-toggle="table" data-search="true" data-toolbar="#toolbar">
+          <thead>
+            <tr>
+              <th data-field="num" data-sortable="true" scope="col">#</th>
+              <th data-field="date" data-sortable="true" scope="col">Date</th>
+              <th data-field="name" data-sortable="true" scope="col"
+>Event</th>
+              <th data-field="category" data-sortable="true" scope="col">Category</th>
+              <th data-field="venue" data-sortable="true" scope="col">Venue Info</th>
+              <th data-field="favorite" data-sortable="false" scope="col">Favorite</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Iterate through all events in event list -->
+            <% events.forEach(function(event, index){ %>
+              <tr>
+                <td><%= index+1 %><p style="display:none;"><%= event.id %></p></td>
+                <td><%= event.dates.start.localDate %></td>
+                <td><a href="event/<%= event['id'] %>"><%= event['name'] %></a></td>
+                <td><%= event['classifications'][0]['segment']['name'] %></td>
+                <td><%= event['_embedded']['venues'][0]['name'] %></td>
+                <td style="text-align: center;"><i class="material-icons star" id=<%= 'i'+event.id %> onclick="return addFavorite(this);">star_border</i></td>
+              </tr>
+        		<% }); %>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="tab-pane fade" id="favorites" name="favorites">
+        <table class="table table-no-bordered table-hover" data-toggle="table" data-sort-name="favorites" clickToSelect="true">
+          <thead>
+            <tr>
+              <th data-field="num" data-sortable="true" scope="col">#</th>
+              <th data-field="date" data-sortable="true" scope="col">Date</th>
+              <th data-field="name" data-sortable="true" scope="col">Event</th>
+              <th data-field="category" data-sortable="true" scope="col">Category</th>
+              <th data-field="venue" data-sortable="true" scope="col">Venue Info</th>
+              <th data-field="favorite" data-sortable="false" scope="col">Favorite</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+
+<script>
+
+  //Add item to favorite list
+  function addFavorite(el)
+  {
+     var info = $(el).parents(':eq(1)').find('td'); //get information of an element(one row)
+     //store event info as map data
+     var eventInfo = { 
+	Id: $(info[0]).find('p').text(),
+	Date: info[1].innerHTML,
+	Name: info[2].innerHTML,
+	Category: info[3].innerHTML,
+	Venue: info[4].innerHTML
+	};
+	
+	console.log(eventInfo);
+	
+	let favorites = localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : [];
+    	localStorage.setItem('favorites', JSON.stringify(favorites));
+
+	if(el.firstChild.data=="star_border") //not marked as favorite
+	{
+	    el.firstChild.data = "star"; //set icon from black star to golden star
+	    favorites.push(eventInfo); // ass to favorites list
+	    localStorage.setItem('favorites', JSON.stringify(favorites)); //update local favorite file
+            var markup = "<tr id=\"" + eventInfo.Id + "\"><td>"+ favorites.length + "</td><td>" + eventInfo.Date +
+                   "</td><td>" + eventInfo.Name + "</td><td>" + eventInfo.Category + "</td><td>" + eventInfo.Venue +
+                   "</td><td style=\"text-align: center\"><i class=\"material-icons star\" id=" + eventInfo.Id + " onclick=\"return removeFavorite(this);\">delete</i></td></tr>";
+	    $("#i"+eventInfo.Id).css("color", "#F8D33A");//set color to be gold on webpage
+	    $('#favorites tbody').append(markup);
+	}else //double click to cancle adding to favorite
+	{
+	    el.firstChild.data = "star_border";
+	    for (var i = 0; i < favorites.length; i++) 
+		{
+		if (favorites[i].Id == eventInfo.Id) { favorites.splice(i,1); break; } //find position of elemnt and remove
+     		 }
+	    localStorage.setItem('favorites', JSON.stringify(favorites)); //update local storage
+	    $("#i"+eventInfo.Id).css("color", ""); //set star color to black
+	    $('#'+eventInfo.Id).remove(); //remove from list
+	};
+  };
+
+
+  //remove events from favorite list, this part is similar as previous function
+  function removeFavorite(el)
+  {
+	let favorites = JSON.parse(localStorage.getItem('favorites'));
+	var eventId = $(el).parents(':eq(1)').attr('id');
+	for (var i = 0; i < favorites.length; i++) 
+	{
+	    if (favorites[i].Id == eventId) { favorites.splice(i,1); break; } //find position of corresponding element 
+     	}	
+   	localStorage.setItem('favorites', JSON.stringify(favorites));
+	$(el).parents(':eq(1)').remove(); //remove item from favorite table amrkup
+	$("#i"+eventInfo.Id).css("color", "");
+	$("#i"+eventId).html($("#i"+eventId).html().replace("star", "star_border")); //switch star to black border
+  };
+</script>
+
+
+
+
+</html>    

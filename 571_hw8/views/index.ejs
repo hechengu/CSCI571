@@ -1,0 +1,144 @@
+<!--Serch page, as well as main page-->
+
+<% include /header %>
+
+<body>
+
+<!--boostrap css-->
+<!--title and background-->
+<div class="col-md-8 offset-lg-2" id="table" style = "backgroud-color:#f2f2f2">
+  <div align = "center" class="col-md-8 offset-lg-2" style="padding:lem 0 lem 0">
+  <h4><b>Entertainment Event Ticket Search</b></h4>
+  </div>
+
+  <!--input area-->
+  <form method="post" action="" class="needs-validation" novalidate>
+
+    <!--Keyword-->
+    <div class="form-group row">
+        <label for="keyword" class="col-sm-2 col-form-label offset-lg-2">Keyword<span style="color:red">*</span></label>
+        <input type = "text" class="col-sm-4 form-control" name="keyword" id="keyword" value="" palceholder="Enter Artist, Team or Event Name (eg. Lakers)" required>
+        <div class="invalid-feedback">Please enter a keyword.</div>
+    </div>
+
+    <!--Category-->
+    <div class="form-group row">
+         <label for="category" class="col-sm-2 col-form-label offset-lg-2">Category</label>
+          <div class="col-sm-2" style="padding-left:2px">
+           <select class = "form-control" name="category" id="category">
+           <option>All</option>
+           <option>Music</option>      
+           <option>Sports</option>
+           <option>Arts & Theater</option>
+           <option>Film</option>      
+           <option>Miscellaneous</option>
+           </select>
+      </div>
+    </div>
+
+    <!--Distance, fist block is number and second block is unit-->
+    <div class="form-group row">
+        <label for="distance" class="col-sm-2 col-form-label offset-lg-2">Distance</label>
+        <input type ="text" class="col-sm-1" name="distance" id="distance" value="10" palceholder="10">
+        <div class="invalid-feedback">Please enter a number.</div>
+
+      <div class="col-sm-2">
+        <select class = "form-control" name="unit" id="unit">
+        <option>Miles</option>
+        <option>Kilometers</option>
+        </select>
+      </div>
+    </div>
+
+    <!--Location, This part contains radio of current position and a customed lication, input type is text-->
+    <fieldset class="form-group">
+      <div class = "row">
+        <legend class="col-sm-2 col-form-label offset-lg-2">From<span style="color:red">*</span></legend>
+	<div class = "col-sm-3 col-form-label">
+	  <div class = "form-check">
+            <input class = "form-check-inline form-check-input" type="radio" name="from" value="current" onclick="removeRequired();" checked>
+            <label class = "form-check-label">Current Location</label>
+          </div>
+	  <div class = "form-check">
+            <input class = "form-check-inline form-check-input" type="radio" name="from" id = "other" value="" onclick="setRequired();" >
+            <label class="form-check-label">Other, Please specify:</label>
+          </div>
+          <input type="text" class="form-control" name="location" id="location" onchange="changeradioother()">
+          <div class="invalid-feedback">Please enter a location.</div>
+	</div>
+      </div>
+    </fieldset>
+
+    <!--Two buttons, submit and clear-->
+    <div class="form-group row">
+        <div class = "col-sm-1 offset-lg-2"> 
+          <button type="submit" style = "width:100px;height:40px" class="btn btn-primary"><img src = "/search.png" style="width:20px;height:20px;margin-left:-2px">Search</button>
+	</div>
+	<div class = "col-sm-1 offset-lg-1">
+          <button type="reset" style = "width:100px;height:40px" class="btn btn-secondary"><img src = "/clear.png" style="width:20px;height:20px;margin-left:-5px">Clear</button>
+	</div>
+    </div>
+
+    <div style="padding: 0 0 1em 0"></div>
+  </form>
+</div>
+
+
+<!--No result and Error message. Shown at the index page-->
+
+<%if (msg=="no_records") {%>
+  <div class="alert alert-warning col-md-8 offset-lg-2" role="alert" align="center">No records.</div>
+<%} else if (msg=="error") {%>
+  <div class="alert alert-danger col-md-8 offset-lg-2" role="alert" align="center">Failed to get search results.</div>
+<%}%>
+</body>
+
+
+<script>
+
+function changeradioother(){
+	  var other= document.getElementById("other");
+	other.value=document.getElementById("location").value;
+};
+
+function setRequired(){
+
+	document.getElementById("location").required=true;
+};
+
+function removeRequired(){
+if(document.getElementById("inputother").required == true){
+	document.getElementById("inputother").required=false;
+	}
+};
+
+//if error has been detected, stop submission
+
+(function() {
+  'use strict';
+  window.addEventListener('load', function() { //listen to event and deal with corresponding result
+    
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) { //method is post 
+      form.addEventListener('submit', function(event) { //activate function when submit is clicked
+        if (form.checkValidity() === false) { //validation is false
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated'); //if success, add the event to valid list
+      }, false);
+    });
+  }, false);
+})();
+</script>
+
+</html>
+
+
+        
+     
+
+      
+  
+

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+	<title>XML</title>
+</head>
+
+<body style ="margin:auto;padding-top:5%;text-align: center;">
+<script type="text/javascript">
+	    var XmlDoc;
+        function outInfo(url)
+{
+        var url = document.getElementById("in").value;
+	    //document.write(url);
+
+	    if (window.XMLHttpRequest)
+	    {// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+	    }	
+	    else
+	    {// code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	    try{
+	    	xmlhttp.open("GET",url,false);
+	    	xmlhttp.send();
+	    }catch(err){
+	    	alert("Enter the valid url");
+	    	return;
+	    }
+	    xmlDoc = xmlhttp.responseXML;
+	    Display(xmlDoc); 
+
+}
+	function Display(xmlDoc)
+{
+	    html_text="<html><head><title>XML Parse Result</title></head><body>";
+        html_text+="<table border='2' width='100%' height='100%'>";
+	    html_text+="<tbody>";
+        html_text+="<tr>";
+	    var Mainline = xmlDoc.getElementsByTagName("Mainline");
+        var headerTag = xmlDoc.getElementsByTagName("Header");
+        var headerContent = headerTag[0].getElementsByTagName("Data");
+	    
+	    for(var i = 0; i<headerContent.length; i++)//Print first row in table
+	    {
+		if(headerContent[i].childNodes.length > 0)//Data Found
+		{
+			html_text+="<th width = 50px>"+ (headerContent[i].firstChild.nodeValue)+"</th>";
+		}else //No data found 
+		{
+			html_text+="<th width =100px>"+'           '+"</th>";
+		}
+	    }
+	    html_text+="</tr>";//change to next column
+	
+	    var rows = xmlDoc.getElementsByTagName("Row");
+	    
+	    for(j = 0; j<rows.length; j++)
+	    {
+		GetText(rows[j], "Company");
+		GetText(rows[j], "Ships");
+		GetInfo(rows[j]);
+		GetText(rows[j], "Market");
+		GetHomepage(rows[j]);
+		GetLogo(rows[j]);
+	    html_text+="</tr>";
+	    }
+
+	    html_text+="</tbody>";
+	    html_text+="</table>";
+	    html_text+="</body></html>"; 
+	    if(rows.length == 0)
+	    { //No data found
+		alert("error was detected");
+	    }else
+	    {
+		html_out = window.open("", "XML Result", "height=700,width=1058,left=30,top=10,resizable=yes,scrollbars=yes");
+    	html_out.document.write(html_text);
+	    }
+}
+
+	function GetText(xmlDoc, tagName)
+{
+	var TagElement = xmlDoc.getElementsByTagName(tagName);
+	if(TagElement.length != 0)
+	{
+		if(TagElement[0].childNodes.length > 0)
+		{
+			html_text+="<td style = min-width:50px>"+(TagElement[0].firstChild.nodeValue)+"</td>";
+		}
+		else
+		{
+			html_text+="<td style = min-width:50px>"+" "+"</td>";
+		}
+	}
+}
+
+	function GetInfo(xmlDoc)
+{
+	var Info_List = xmlDoc.getElementsByTagName("Info");
+	html_text+="<td>";
+	html_text+="<ul>";
+	if(Info_List[0].childNodes.length==0)
+	{
+		html_text+="<li>' '</li>";
+	}
+	else
+	{
+		for (k=0; k<Info_List[0].childNodes.length; k++)
+		{
+
+			if(Info_List[0].childNodes[k].nodeType == 1 && Info_List[0].childNodes[k].childNodes.length >0)
+			{
+				if(k == 1)
+				{
+					html_text+="<li style=min-width:150px><b>"+ Info_List[0].childNodes[k].firstChild.nodeValue+"</b></li>";
+				}
+				else
+				{
+					html_text+="<li style=min-width:150px>"+ Info_List[0].childNodes[k].firstChild.nodeValue+"</li>";
+				}
+			}
+		}
+	}
+	html_text+="</ul>";
+	html_text+="</td>";
+}
+
+	function GetHomepage(xmlDoc)
+{
+	var homepageTags = xmlDoc.getElementsByTagName("HomePage");
+	if (homepageTags.length != 0)
+	{
+		if(homepageTags[0].childNodes.length > 0)
+		{
+			html_text+="<td style=min-width:150px><a href ='"+homepageTags[0].firstChild.nodeValue+"'>"+homepageTags[0].firstChild.nodeValue+"</td>";
+		}else
+		{
+			html_text+="<td  style=min-width:150px>"+" "+"</td>";
+		}
+	}
+}
+
+	function GetLogo(xmlDoc)
+{
+	var logoTag = xmlDoc.getElementsByTagName("Logo");
+	if(logoTag.length != 0)
+	{
+		if(logoTag[0].childNodes.length > 0)
+		{
+			html_text+="<td  style=min-width:150px><img src='"+logoTag[0].firstChild.data+"' width='100%' height='100%'></td>";
+		}else
+		{
+			html_text+="<td  style=min-width:150px>"+" "+"</td>";
+		}
+	}
+}
+	
+		
+	
+</script>
+    <form action="javascript:void(0);" id="xml-form">
+    <p><b>Enter URL for container shipping companies list XML file</b></p>
+    <input type="text" id="in" value=""/><br>
+    <button onclick="outInfo()">Submit Query</button>
+</form>
+</body>
+</html>
